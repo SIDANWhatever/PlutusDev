@@ -63,7 +63,6 @@
 >executable Example
 >    import:           common-all
 >    main-is:          example.hs
->    other-modules:    NFT
 >    build-depends:    base ^>=4.14.1.0,
 >                      deepseq >= 1.4.4.0
 >    hs-source-dirs:   app, src
