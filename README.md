@@ -2,6 +2,93 @@
 * Plutus-starter: https://github.com/input-output-hk/plutus-starter
 * Guide: https://github.com/plutus-community/docs/blob/main/docs/Guides/plutus-starter.md
 
+Note: The guide above demonstrated how you work with built code, heading to production testing. For the start of development, please follow below's step.
+
+## 1. Create a template
+* Go to https://github.com/input-output-hk/plutus-starter & click the green button `Use this template`
+
+## 2. Git clone the template to local directory
+>```
+>git clone https://github.com/SIDANWhatever/plutus-starter
+>```
+
+## 3. To add `cardano-cli` and `cardano-node` to the nix-shell
+* Change the whole `shell.nix` file's content to below (copy & paste below to the `shell.nix` file)
+>```
+>{ pure ? false
+>, source-repo-override ? { } }:
+>let
+>  packages = import ./. { inherit source-repo-override; };
+>  inherit (packages) pkgs plutus-apps plutus-starter;
+>  inherit (plutus-starter) haskell;
+>  
+>  cardano-node = import
+>   (pkgs.fetchgit {
+>     url = "https://github.com/input-output-hk/cardano-node";
+>     # A standard release compatible with the cardano-wallet commit is always preferred.
+>     rev = "1.34.1";
+>     sha256 = "1hh53whcj5y9kw4qpkiza7rmkniz18r493vv4dzl1a8r5fy3b2bv";
+>   })
+>   { };
+>
+>in
+>  haskell.project.shellFor {
+>    withHoogle = false;
+>    
+>    
+>    nativeBuildInputs = with plutus-starter; [
+>      hlint
+>      cabal-install
+>      cardano-node.cardano-cli
+>      cardano-node.cardano-node
+>      haskell-language-server
+>      stylish-haskell
+>      pkgs.niv
+>      cardano-repo-tool
+>      pkgs.ghcid
+>      # HACK: This shouldn't need to be here.
+>      pkgs.lzma.dev
+>    ] ++ (pkgs.lib.optionals pure [
+>      pkgs.git
+>      pkgs.cacert
+>      pkgs.curl
+>      pkgs.jq
+>    ]);
+>  }
+>```
+
+## 4. Build the necessary package right ahead
+* Run `nix-shell` in the terminal to build necessary packages first (expect quite a long build time here)
+
+## 5. Change `cabal` setting to the project setting
+* Delete the whole example folder coz it is not related to our projects.
+* plutus-starter.cabal
+> * Change the file name to others, for example, if my project name is sidex, change it to `sidex.cabal`
+> * Delete anything below `library` to avoid `cabal repl` error of referring to other packages.
+> * Amend the `library` to delete anything related to our project, example:
+> ```
+> library
+>    import: lang
+>    exposed-modules:
+>      Sidex
+>    build-depends:
+>      base >= 4.9 && < 5,
+>      aeson,
+>      bytestring,
+>      containers,
+>      freer-extras,
+>      playground-common,
+>      plutus-contract,
+>      plutus-tx-plugin,
+>      plutus-tx,
+>      plutus-ledger,
+>    hs-source-dirs: src
+> 
+* cabal.project
+> * Change the third line into your project name (e.g. here `packages: sidex.cabal`)
+
+## 6. Happy Plutus Developing!
+
 # Alternative: Build from Cabal Module
 * Please follow below's set up for dev environemnt.
 
