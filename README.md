@@ -74,3 +74,8 @@
 >                      deepseq >= 1.4.4.0
 >    hs-source-dirs:   app, src
 >```
+
+## 4. Copy a PPP cabal.project
+* copy one cabal.project file to the directory with the `packages` on the top changed to the `.cabal` name of the project
+
+## 5. cabal repl in terminal to compile
