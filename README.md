@@ -7,7 +7,9 @@
 ## 1. Clone the plutus apps repo from IOHK
 >```
 >git clone https://github.com/input-output-hk/plutus-apps.git
+>git checkout c9c1e917edbfa3b972c92108d7b94d5430e07a28
 >```
+* We use PPP cohort 3 lecture 8's tag to make sure the plutus-apps nix-shell works.
 
 ## 2. Enter the nix-shell
 >```
@@ -15,3 +17,5 @@
 >nix-shell
 >```
 * Please expect build time here.
+
+## 3. Create 
